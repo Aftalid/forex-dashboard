@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forex Signal Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      margin: 20px;
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      margin: 20px 0 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .signal-card {
+      border-radius: 8px;
+      padding: 10px;
+      color: #fff;
+      position: relative;
+    }
+
+    .filled { background-color: #bdbdbd; }
+    .sell { background-color: #ef5350; }
+    .buy { background-color: #66bb6a; }
+    .locked {
+      background-color: #f1f1f1;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .premium-btn {
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .chart-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+
+    .summary-table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+
+    .summary-table th, .summary-table td {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    .summary-table th {
+      background-color: #f5f5f5;
+    }
+
+    @media screen and (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Forex Signal Dashboard</h2>
+
+
+
+<div class="grid" id="signalCards"></div>
+
+<script>
+  const sheetURL = "https://script.google.com/macros/s/AKfycbwW1sm8YrSPEc4GM5gMavSKREAvCf8F19rV3f2zKH3yr72mDxWF1rboQvewIcp8qiFu/exec";
+
+  async function loadSignals() {
+    const res = await fetch(sheetURL);
+    const data = await res.json();
+    const container = document.getElementById("signalCards");
+
+    data.forEach(signal => {
+      const card = document.createElement("div");
+      card.className = "signal-card " + signal.Action.toLowerCase();
+
+      card.innerHTML = `
+        <h3>${signal.Symbol}</h3>
+        <p><strong>Action:</strong> ${signal.Action}</p>
+        <p><strong>${signal.Action} at:</strong> ${signal.Entry}</p>
+        <p><strong>Take Profit:</strong> ${signal.TP}</p>
+        <p><strong>Stop Loss:</strong> ${signal.SL}</p>
+        <p><strong>From:</strong> ${signal.From}</p>
+        <p><strong>Till:</strong> ${signal.Till}</p>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  loadSignals();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="grid">
+    <div class="signal-card buy">
+  <h3>USD/CAD</h3>
+  <p><strong>Action:</strong> Buy</p>
+  <p><strong>Buy at:</strong> 1.3963</p>
+  <p><strong>Take Profit:</strong> 1.3985</p>
+  <p><strong>Stop Loss:</strong> 1.3935</p>
+  <p><strong>From:</strong> 11:23 UTC+5:30</p>
+  <p><strong>Till:</strong> 19:23 UTC+5:30</p>
+</div>
+
+
+  <div class="signal-card sell">
+  <h3>USD/JPY</h3>
+  <p><strong>Action:</strong> Sell</p>
+  <p><strong>Sell at:</strong> 144.92</p>
+  <p><strong>Take Profit:</strong> 144.60</p>
+  <p><strong>Stop Loss:</strong> 145.32</p>
+  <p><strong>From:</strong> 13:35 UTC+5:30</p>
+  <p><strong>Till:</strong> 17:35 UTC+5:30</p>
+</div>
+
+
+<div class="signal-card locked">
+  <h3>AUD/USD</h3>
+  <p><strong>AUD/USD signal</strong></p>
+  <p>Wait 90 minute(s) to open</p>
+  <button class="premium-btn">Premium</button>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Chart Section -->
+  <h2>Recent Results</h2>
+  <div class="chart-container">
+    <canvas id="resultsChart"></canvas>
+  </div>
+
+  <!-- Summary Table -->
+  <h2>Monthly Summary</h2>
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>EUR/USD</th>
+        <th>USD/CHF</th>
+        <th>USD/JPY</th>
+        <th>USD/CAD</th>
+        <th>AUD/USD</th>
+        <th>EUR/JPY</th>
+        <th>NZD/USD</th>
+        <th>GBP/CHF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>May 2025</td><td>+12</td><td>-4</td><td>+6</td><td>+10</td><td>-1</td><td>+2</td><td>-3</td><td>+1</td></tr>
+      <tr><td>Apr 2025</td><td>+8</td><td>-2</td><td>+5</td><td>+6</td><td>-2</td><td>+1</td><td>-1</td><td>+3</td></tr>
+      <tr><td>Mar 2025</td><td>+10</td><td>+1</td><td>+4</td><td>+5</td><td>0</td><td>-1</td><td>-2</td><td>+2</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    const ctx = document.getElementById('resultsChart').getContext('2d');
+    const resultsChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['May 1', 'May 2', 'May 3', 'May 4', 'May 5', 'May 6', 'May 7'],
+        datasets: [{
+          label: 'Profit',
+          data: [12, 8, 6, 10, 15, 5, 9],
+          backgroundColor: 'green'
+        },
+        {
+          label: 'Loss',
+          data: [-4, -2, -3, -5, -1, -6, -2],
+          backgroundColor: 'red'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
